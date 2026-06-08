@@ -1,0 +1,600 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andrew Sinha Portfolio</title>
+    <style>
+        /* --- DESIGN SYSTEM & VARIABLES --- */
+        :root {
+            --bg-main: #0a0c10;
+            --bg-card: #121620;
+            --bg-nav: rgba(10, 12, 16, 0.9);
+            --border-color: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #2563eb;
+            --accent-hover: #3b82f6;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
+
+        /* --- BASE RESET --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        body {
+            padding-top: 80px; /* Accounts for fixed navbar */
+        }
+
+        a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        /* --- LAYOUT CONTAINERS --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        section {
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.8rem; margin-bottom: 1.5rem; position: relative; display: inline-block;}
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent-blue);
+        }
+        h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        /* --- NAVIGATION BAR --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background-color: var(--bg-nav);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: var(--accent-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-blue);
+        }
+
+        /* --- PAGE 1: BIOGRAPHY / HOME --- */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 2s;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .tagline {
+            font-family: var(--font-mono);
+            color: var(--accent-blue);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .skill-tag {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+        }
+
+        /* --- PAGE 2: PROJECT SHOWCASE (COLLAPSIBLE) --- */
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        /* Custom Styling for HTML5 Details/Summary Accordion */
+        details {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        details[open] {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        summary {
+            padding: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            transition: transform 0.2s ease;
+        }
+
+        details[open] summary::after {
+            content: '−';
+        }
+
+        .project-inner {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+
+        .project-meta {
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-label {
+            font-family: var(--font-mono);
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 0.25rem;
+            margin-top: 1rem;
+        }
+
+        .project-media {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin: 1rem 0;
+            background-color: #000;
+        }
+
+        /* Code Block Styling */
+        pre {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        /* --- PAGE 3: RESUME & CONTACT --- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .resume-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-top: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+            color: var(--text-primary);
+        }
+
+        .contact-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .contact-item span {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            width: 80px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 768px) {
+            body { padding-top: 60px; }
+            .navbar { height: 60px; }
+            .nav-links { gap: 1rem; }
+            h1 { font-size: 2rem; }
+            .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+            section { padding: 2.5rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#about" class="nav-logo">Andrew<span>.Sinha</span></a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#resume-contact">Resume & Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <section id="about">
+            <div class="hero-grid">
+                <div>
+                    <p class="tagline">Andrew Sinha</p>
+                    <h1>Web, Software, and Command Line Development Solutions.</h1>
+                    <p>
+                        I am a high school student focused on 
+                    </p>
+                    <p>
+                        My professional objectives focus on bridging the gap between hardware-level performance and robust application logic. Whether engineering cross-platform CLI toolsets, programming microcontrollers, or managing localized web states, I construct efficient, self-documenting codebases built for production viability.
+                    </p>
+                    
+                    <div class="skills-grid">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">C++ / Arduino</span>
+                        <span class="skill-tag">Linux</span>
+                        <span class="skill-tag">Git / Github</span>
+                        <span class="skill-tag">FIRST Robotics Programming</span>
+                        <span class="skill-tag">Web Development w/ React + Base HTML/CSS/JS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2>Project Showcase</h2>
+            <p>An overview of engineering milestones completed over the past calendar year, spanning low-level computing to full-stack implementation.</p>
+
+            <div class="project-list">
+
+                <details>
+                    <summary>01. Secure Cryptographic Password Vault (CLI)</summary>
+                    <div class="project-inner">
+                        <div class="project-meta">
+                            <span class="meta-label">Problem Statement</span>
+                            <p>Local credential storage solutions frequently rely on insecure plain-text architectures or heavy dependencies. This system targets the requirement for an isolated, dependency-free command-line execution layer to manage encrypted local credentials securely.</p>
+                            
+                            <span class="meta-label">Technical Stack</span>
+                            <p>Python 3.x, Standard Cryptography Libraries (Fernet/Hashlib), JSON, Argparse.</p>
+                        </div>
+
+                        <div class="project-media" style="display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem; min-height: 200px;">
+                            [INSERT SCREENSHOT/DEMO VIDEO: Python CLI Session Output]
+                        </div>
+
+                        <div class="project-meta">
+                            <span class="meta-label">Process & Reflection</span>
+                            <p>
+                                Implementing secure PBKDF2 key-derivation processes within strict terminal-only limitations required careful exception handling for sensitive runtime memory. A primary hurdle surfaced when handling cross-platform terminal masking during credential entry (`getpass` module irregularities between Windows environments and POSIX shells). I resolved this behavior by embedding an environment-aware validation loop that dynamically checks standard I/O states before parsing runtime arguments.
+                            </p>
+                        </div>
+
+                        <span class="meta-label">Core Implementation Snippet</span>
+                        <pre><code>def derive_key(passphrase: str, salt: bytes) -> bytes:
+    """Generates an isolated cryptographic key leveraging SHA256 hashing."""
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100_000
+    )
+    return base64.urlsafe_b64encode(kdf.derive(passphrase.encode()))</code></pre>
+                        
+                        <p style="margin-top: 1rem;"><a href="https://github.com/username/project-repo" target="_blank">View Production Repository &rarr;</a></p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>02. Micro-Climate Greenhouse Controller (IoT)</summary>
+                    <div class="project-inner">
+                        <div class="project-meta">
+                            <span class="meta-label">Problem Statement</span>
+                            <p>Agricultural environmental tracking systems often fail to scale effectively due to unstable edge loop cycles and inefficient data serialization protocols over wireless links.</p>
+                            
+                            <span class="meta-label">Technical Stack</span>
+                            <p>C++, Arduino IDE, ESP32 Microcontroller, DHT22 Sensor, I2C OLED Display, FreeRTOS.</p>
+                        </div>
+
+                        <div class="project-media" style="display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem; min-height: 200px;">
+                            [INSERT SCREENSHOT/DEMO VIDEO: Hardware Wiring & Sensor telemetry logs]
+                        </div>
+
+                        <div class="project-meta">
+                            <span class="meta-label">Process & Reflection</span>
+                            <p>
+                                Developing for the ESP32 platform highlighted the critical importance of memory footprint optimization. Initial code variations experienced synchronous lag during Wi-Fi handshakes, which effectively halted sensor polling operations. To mitigate this block, I refactored the structural workflow using FreeRTOS tasks to isolate sensor collection and network telemetry onto separate processing cores.
+                            </p>
+                        </div>
+
+                        <span class="meta-label">Core Implementation Snippet</span>
+                        <pre><code>void setupEnvironmentalTask() {
+    xTaskCreatePinnedToCore(
+        SensorReadLoop,    /* Task execution pointer */
+        "SensorRead",      /* Debug identifier */
+        4096,              /* Assigned stack allocation size */
+        NULL,              /* Parameter assignments */
+        1,                 /* Execution hierarchy priority */
+        &SensorTaskHandle, /* Thread Reference */
+        0                  /* Assigned Core Pointer */
+    );
+}</code></pre>
+
+                        <p style="margin-top: 1rem;"><a href="https://github.com/username/project-repo" target="_blank">View Production Repository &rarr;</a></p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>03. Client-Side Persistent Kanban System</summary>
+                    <div class="project-inner">
+                        <div class="project-meta">
+                            <span class="meta-label">Problem Statement</span>
+                            <p>Modern task trackers are frequently bogged down by unnecessary cloud synchronization requirements, introducing latency for users seeking simple, localized workflows.</p>
+                            
+                            <span class="meta-label">Technical Stack</span>
+                            <p>Vanilla JavaScript (ES6+), Semantic HTML5, Custom CSS Grid/Flexbox, LocalStorage API.</p>
+                        </div>
+
+                        <div class="project-media" style="display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem; min-height: 200px;">
+                            [INSERT SCREENSHOT/DEMO VIDEO: Board drag-and-drop mechanics interface]
+                        </div>
+
+                        <div class="project-meta">
+                            <span class="meta-label">Process & Reflection</span>
+                            <p>
+                                This project focused strictly on building responsive UI layouts without external framework overhead (e.g., React or Vue). Relying purely on the native HTML5 Drag and Drop API exposed structural challenges regarding UI sync states with `localStorage`. I overcame state drift bugs by building a centralized "State Engine" object that triggers atomic UI repaints whenever the task data array mutates.
+                            </p>
+                        </div>
+
+                        <span class="meta-label">Core Implementation Snippet</span>
+                        <pre><code>const updateLocalStorage = (boardState) => {
+    try {
+        localStorage.setItem('kanban_data', JSON.stringify(boardState));
+    } catch (error) {
+        console.error('State persistence fault encountered:', error);
+    }
+};</code></pre>
+
+                        <p style="margin-top: 1rem;"><a href="https://github.com/username/project-repo" target="_blank">View Production Repository &rarr;</a></p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>04. Automated Network Packet Analyzer Tool</summary>
+                    <div class="project-inner">
+                        <div class="project-meta">
+                            <span class="meta-label">Problem Statement</span>
+                            <p>System Administrators require lightweight, easily deployable network metrics reporting tools that do not consume heavy desktop system resources during execution loops.</p>
+                            
+                            <span class="meta-label">Technical Stack</span>
+                            <p>Java (OpenJDK 17), Pcap4j Wrapper Library, Multi-threaded Logging Engine.</p>
+                        </div>
+
+                        <div class="project-media" style="display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem; min-height: 200px;">
+                            [INSERT SCREENSHOT/DEMO VIDEO: Terminal active packet inspection log stream]
+                        </div>
+
+                        <div class="project-meta">
+                            <span class="meta-label">Process & Reflection</span>
+                            <p>
+                                Managing multi-threaded object references without causing thread deadlock was the primary challenge of this project. High-bandwidth environments drop interface instances if buffer parsing execution cycles lag. I successfully decoupled packet reception structures from disk-writing threads by leveraging an isolated, non-blocking `LinkedBlockingQueue` buffer pool.
+                            </p>
+                        </div>
+
+                        <span class="meta-label">Core Implementation Snippet</span>
+                        <pre><code>public class PacketConsumer implements Runnable {
+    private final LinkedBlockingQueue&lt;Packet&gt; bufferQueue;
+
+    @Override
+    public void run() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Packet packet = bufferQueue.take();
+                parseHeaderMetadata(packet);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}</code></pre>
+
+                        <p style="margin-top: 1rem;"><a href="https://github.com/username/project-repo" target="_blank">View Production Repository &rarr;</a></p>
+                    </div>
+                </details>
+
+            </div>
+        </section>
+
+        <section id="resume-contact">
+            <div class="contact-grid">
+                
+                <div class="resume-card">
+                    <h3>Resume</h3>
+                    <p>Review my extracurriculars, work experience, and computer science projects among other achievements..</p>
+                    <div style="border: 1px dashed var(--border-color); padding: 1.5rem; margin: 1rem 0; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary);">
+                        [ Click Below ]
+                    </div>
+                    <a href="" download class="btn">Download My Resume (PDF)</a>
+                </div>
+
+                <div>
+                    <h3>Professional Communications</h3>
+                    <p>Please connect via any of the verified channels below for technical collaborations or formal inquiries.</p>
+                    
+                    <ul class="contact-list">
+                        <li class="contact-item">
+                            <span>Email</span>
+                            <a href="mailto:ajsinha2027@gmail.com">ajsinha2027@gmail.com</a>
+                        </li>
+                        <li class="contact-item">
+                            <span>GitHub</span>
+                            <a href="https://github.com/andsin09" target="_blank">github.com/andsin09</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; Andrew Sinha 2026.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
+
+```
